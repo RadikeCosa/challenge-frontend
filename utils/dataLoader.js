@@ -20,4 +20,4 @@ const personas = loadDataFromCSV("personas");
 const peliculas = loadDataFromCSV("peliculas");
 const scores = loadDataFromCSV("scores");
 
-module.exports = { personas, peliculas, scores };
+module.exports = { loadDataFromCSV };

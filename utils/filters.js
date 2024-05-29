@@ -16,9 +16,16 @@ function filterByYear(peliculas, year) {
       new Date(pelicula["Release Date"]).getFullYear() === parseInt(year)
   );
 }
-
+function filterByRating(movies, rating) {
+  return movies.filter((movie) => {
+    const movieRating = parseFloat(movie.avg_rating);
+    const movieRatingInteger = Math.trunc(movieRating);
+    return movieRatingInteger === rating;
+  });
+}
 module.exports = {
   filterByName,
   filterByGenre,
   filterByYear,
+  filterByRating,
 };
