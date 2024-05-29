@@ -16,8 +16,4 @@ const loadDataFromCSV = (fileName) => {
   return data;
 };
 
-const personas = loadDataFromCSV("personas");
-const peliculas = loadDataFromCSV("peliculas");
-const scores = loadDataFromCSV("scores");
-
 module.exports = { loadDataFromCSV };

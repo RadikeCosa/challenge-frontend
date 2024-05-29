@@ -23,9 +23,15 @@ function filterByRating(movies, rating) {
     return movieRatingInteger === rating;
   });
 }
+function checkUserRateMovie(scores, user_id, movie_id) {
+  return scores.filter(
+    (score) => score.user_id === user_id && score.movie_id === movie_id
+  );
+}
 module.exports = {
   filterByName,
   filterByGenre,
   filterByYear,
   filterByRating,
+  checkUserRateMovie,
 };
