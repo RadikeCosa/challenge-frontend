@@ -28,5 +28,31 @@ function mergeMoviesWithRatings(movies, ratings) {
     };
   });
 }
+function getAverageByYear(movies) {
+  // Agrupar películas por año
+  const moviesByYear = movies.reduce((acc, movie) => {
+    const year = movie["Release Date"].split("-")[2];
+    if (!acc[year]) {
+      acc[year] = [];
+    }
+    acc[year].push(parseFloat(movie["avg_rating"]));
+    return acc;
+  }, {});
 
-module.exports = { calculateMovieRatings, mergeMoviesWithRatings };
+  // Calcular la calificación promedio para cada año con un decimal
+  const averageRatings = Object.keys(moviesByYear).map((year) => {
+    const ratings = moviesByYear[year];
+    const averageRating = (
+      ratings.reduce((acc, rating) => acc + rating, 0) / ratings.length
+    ).toFixed(1);
+    return { year, averageRating: parseFloat(averageRating) }; // Convertir de nuevo a número
+  });
+
+  return averageRatings;
+}
+
+module.exports = {
+  calculateMovieRatings,
+  mergeMoviesWithRatings,
+  getAverageByYear,
+};

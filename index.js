@@ -3,6 +3,7 @@ const { loadDataFromCSV } = require("./utils/dataLoader");
 const {
   calculateMovieRatings,
   mergeMoviesWithRatings,
+  getAverageByYear,
 } = require("./utils/ratingFunctions");
 const {
   filterByName,
@@ -22,7 +23,8 @@ const PORT = 3000;
 
 app.use(express.json());
 app.use(cors());
-app.get("/api/votes/:user_id/:movie_id", (req, res) => {
+
+app.get("/api/checkvote/:user_id/:movie_id", (req, res) => {
   const { user_id, movie_id } = req.params;
   const voto = checkUserRateMovie(scores, user_id, movie_id);
   if (voto.length > 0) {
@@ -78,6 +80,22 @@ app.get("/api/peliculas/genre/:genre", (req, res) => {
   }
 });
 
+app.get("/api/peliculas/analisis/:genre", (req, res) => {
+  const ratings = calculateMovieRatings(scores);
+  const peliculasConRating = mergeMoviesWithRatings(peliculas, ratings);
+  const { genre } = req.params;
+  const peliculasFiltradas = filterByGenre(peliculasConRating, genre);
+  const averageRatingByYear = getAverageByYear(peliculasFiltradas);
+
+  if (averageRatingByYear.length > 0) {
+    res.json(averageRatingByYear);
+  } else {
+    res
+      .status(404)
+      .json({ message: `No se encontraron películas del género ${genre}` });
+  }
+});
+
 app.get("/api/peliculas/ano/:ano", (req, res) => {
   const { ano } = req.params;
   const ratings = calculateMovieRatings(scores);
@@ -126,5 +144,17 @@ app.post("/api/voto", (req, res) => {
   scores.push(newVote);
   res.status(201).json({ message: "Voto registrado con éxito", voto: newVote });
 });
+app.put("/api/voto", (req, res) => {
+  const { user_id, movie_id, rating } = req.body;
 
+  const existingVote = checkUserRateMovie(scores, user_id, movie_id);
+
+  if (!existingVote.length) {
+    return res.status(404).json({ message: "No se encontró el voto" });
+  }
+
+  existingVote[0].rating = rating.toString();
+
+  res.status(200).json({ message: "Rating actualizado con éxito" });
+});
 app.listen(PORT, () => console.log(`Servidor escuchando en el puerto ${PORT}`));
