@@ -11,6 +11,8 @@ const {
   filterByYear,
   filterByRating,
   checkUserRateMovie,
+  getGenres,
+  getReleaseYears,
 } = require("./utils/filters");
 const personas = loadDataFromCSV("personas");
 const peliculas = loadDataFromCSV("peliculas");
@@ -30,13 +32,8 @@ app.get("/api/checkvote/:user_id/:movie_id", (req, res) => {
   if (voto.length > 0) {
     res.json(voto[0]);
   } else {
-    res.json({ message: "No hay votos de este usuario para esta película" });
+    res.status(404).json({ error: "Vote not found" });
   }
-});
-
-app.get("/api/prueba", (req, res) => {
-  const voto = checkUserRateMovie(scores, "6", "86");
-  res.json(voto);
 });
 
 app.post("/api/login", (req, res) => {
@@ -156,5 +153,13 @@ app.put("/api/voto", (req, res) => {
   existingVote[0].rating = rating.toString();
 
   res.status(200).json({ message: "Rating actualizado con éxito" });
+});
+app.get("/api/getgenres", (req, res) => {
+  const genres = getGenres(peliculas);
+  res.json(genres);
+});
+app.get("/api/getreleaseyears", (req, res) => {
+  const years = getReleaseYears(peliculas);
+  res.json(years);
 });
 app.listen(PORT, () => console.log(`Servidor escuchando en el puerto ${PORT}`));
