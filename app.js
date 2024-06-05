@@ -26,6 +26,8 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 
+app.post("/api/login", login);
+
 app.get("/api/checkvote/:user_id/:movie_id", (req, res) => {
   const { user_id, movie_id } = req.params;
   const voto = checkUserRateMovie(scores, user_id, movie_id);
