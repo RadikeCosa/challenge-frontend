@@ -1,5 +1,4 @@
-const { loadDataFromCSV } = require("../utils/dataLoader");
-const personas = loadDataFromCSV("personas");
+const { personas } = require("../utils/dataLoader");
 
 const login = (req, res) => {
   const { user, password } = req.body;

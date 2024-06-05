@@ -1,5 +1,4 @@
-const { loadDataFromCSV } = require("../utils/dataLoader");
-const scores = loadDataFromCSV("scores");
+const { scores } = require("../utils/dataLoader");
 const { checkUserRateMovie } = require("../utils/filters");
 
 const checkVote = (req, res) => {

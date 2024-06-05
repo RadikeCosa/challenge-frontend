@@ -1,11 +1,13 @@
 const express = require("express");
 const cors = require("cors");
-const { loadDataFromCSV } = require("./utils/dataLoader");
+const { peliculas, scores } = require("./utils/dataLoader");
+const routes = require("./routes/routes");
 const {
   calculateMovieRatings,
   mergeMoviesWithRatings,
   getAverageByYear,
 } = require("./utils/ratingFunctions");
+
 const {
   filterByName,
   filterByGenre,
@@ -18,46 +20,12 @@ const {
 const { login } = require("./controller/loginController");
 const { checkVote } = require("./controller/checkVoteController");
 
-const peliculas = loadDataFromCSV("peliculas");
-const scores = loadDataFromCSV("scores");
-
 const app = express();
 
 app.use(express.json());
 app.use(cors());
 
-app.post("/api/login", login);
-
-app.get("/api/checkvote/:user_id/:movie_id", checkVote);
-
-app.get("/api/peliculas/name/:name", (req, res) => {
-  const ratings = calculateMovieRatings(scores);
-  const peliculasConRating = mergeMoviesWithRatings(peliculas, ratings);
-  const { name } = req.params;
-  const peliculasFiltradas = filterByName(peliculasConRating, name);
-  if (peliculasFiltradas.length > 0) {
-    res.json(peliculasFiltradas);
-  } else {
-    res.status(404).json({
-      message: `No se encontraron películas que el nombre incluya ${name}`,
-    });
-  }
-});
-
-app.get("/api/peliculas/genre/:genre", (req, res) => {
-  const ratings = calculateMovieRatings(scores);
-  const peliculasConRating = mergeMoviesWithRatings(peliculas, ratings);
-  const { genre } = req.params;
-  const peliculasFiltradas = filterByGenre(peliculasConRating, genre);
-
-  if (peliculasFiltradas.length > 0) {
-    res.json(peliculasFiltradas);
-  } else {
-    res
-      .status(404)
-      .json({ message: `No se encontraron películas del género ${genre}` });
-  }
-});
+app.use("/api", routes);
 
 app.get("/api/peliculas/analisis/:genre", (req, res) => {
   const ratings = calculateMovieRatings(scores);
@@ -72,39 +40,6 @@ app.get("/api/peliculas/analisis/:genre", (req, res) => {
     res
       .status(404)
       .json({ message: `No se encontraron películas del género ${genre}` });
-  }
-});
-
-app.get("/api/peliculas/ano/:ano", (req, res) => {
-  const { ano } = req.params;
-  const ratings = calculateMovieRatings(scores);
-  const peliculasConRating = mergeMoviesWithRatings(peliculas, ratings);
-  const peliculasFiltradas = filterByYear(peliculasConRating, ano);
-
-  if (peliculasFiltradas.length > 0) {
-    res.json(peliculasFiltradas);
-  } else {
-    res.status(404).json({
-      message: `No se encontraron películas lanzadas en el año ${ano}`,
-    });
-  }
-});
-
-app.get("/api/peliculas/rating/:rating", (req, res) => {
-  const { rating } = req.params;
-  const ratings = calculateMovieRatings(scores);
-  const peliculasConRating = mergeMoviesWithRatings(peliculas, ratings);
-  const peliculasFiltradas = filterByRating(
-    peliculasConRating,
-    parseInt(rating)
-  );
-
-  if (peliculasFiltradas.length > 0) {
-    res.json(peliculasFiltradas);
-  } else {
-    res.status(404).json({
-      message: `No se encontraron películas calificadas con rating ${rating}`,
-    });
   }
 });
 

@@ -2,6 +2,20 @@ const fs = require("fs");
 const csv = require("csv-parser");
 const path = require("path");
 
+const {
+  calculateMovieRatings,
+  mergeMoviesWithRatings,
+} = require("./ratingFunctions");
+const {
+  filterByName,
+  filterByGenre,
+  filterByYear,
+  filterByRating,
+  checkUserRateMovie,
+  getGenres,
+  getReleaseYears,
+} = require("./filters");
+
 const loadDataFromCSV = (fileName) => {
   const data = [];
   fs.createReadStream(path.join(__dirname, "../data", `${fileName}.csv`))
@@ -16,4 +30,14 @@ const loadDataFromCSV = (fileName) => {
   return data;
 };
 
-module.exports = { loadDataFromCSV };
+const personas = loadDataFromCSV("personas");
+const peliculas = loadDataFromCSV("peliculas");
+const scores = loadDataFromCSV("scores");
+const ratings = calculateMovieRatings(scores);
+
+module.exports = {
+  loadDataFromCSV,
+  personas,
+  peliculas,
+  scores,
+};
