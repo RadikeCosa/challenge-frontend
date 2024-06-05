@@ -16,8 +16,8 @@ const {
   getReleaseYears,
 } = require("./utils/filters");
 const { login } = require("./controller/loginController");
+const { checkVote } = require("./controller/checkVoteController");
 
-const personas = loadDataFromCSV("personas");
 const peliculas = loadDataFromCSV("peliculas");
 const scores = loadDataFromCSV("scores");
 
@@ -28,27 +28,7 @@ app.use(cors());
 
 app.post("/api/login", login);
 
-app.get("/api/checkvote/:user_id/:movie_id", (req, res) => {
-  const { user_id, movie_id } = req.params;
-  const voto = checkUserRateMovie(scores, user_id, movie_id);
-  if (voto.length > 0) {
-    res.json(voto[0]);
-  } else {
-    res.status(404).json({ error: "Vote not found" });
-  }
-});
-
-app.post("/api/login", (req, res) => {
-  const { user, password } = req.body;
-  const persona = personas.find(
-    (persona) => persona.id === user && persona["Full Name"] === password
-  );
-  if (persona) {
-    res.json({ message: "Login successful", user: persona });
-  } else {
-    res.status(401).json({ message: "Invalid user or password" });
-  }
-});
+app.get("/api/checkvote/:user_id/:movie_id", checkVote);
 
 app.get("/api/peliculas/name/:name", (req, res) => {
   const ratings = calculateMovieRatings(scores);
