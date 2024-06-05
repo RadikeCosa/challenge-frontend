@@ -51,8 +51,35 @@ function getAverageByYear(movies) {
   return averageRatings;
 }
 
+const idPeliculasGenero = (movies) => {
+  return movies.map((pelicula) => pelicula.id);
+};
+const contarVotos = (scores, arrayId) => {
+  // Inicializar el objeto para almacenar el recuento de votos
+  const votosContados = {
+    1: 0,
+    2: 0,
+    3: 0,
+    4: 0,
+    5: 0,
+  };
+
+  // Recorrer cada objeto en el array de scores
+  scores.forEach((score) => {
+    // Verificar si el movie_id coincide con algún valor en arrayId
+    if (arrayId.includes(score.movie_id)) {
+      // Incrementar el recuento de votos para el rating correspondiente
+      votosContados[score.rating]++;
+    }
+  });
+
+  return votosContados;
+};
+
 module.exports = {
   calculateMovieRatings,
   mergeMoviesWithRatings,
   getAverageByYear,
+  idPeliculasGenero,
+  contarVotos,
 };

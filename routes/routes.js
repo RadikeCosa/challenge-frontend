@@ -13,7 +13,10 @@ const {
   getGenresHandler,
   getReleaseYearsHandler,
 } = require("../controller/selectControllers");
-const { analisisRatingPorAno } = require("../controller/analisisController");
+const {
+  analisisRatingPorAno,
+  analisisVotosGenero,
+} = require("../controller/analisisController");
 
 // Rutas
 router.post("/login", login);
@@ -27,5 +30,6 @@ router.put("/voto", updateVote);
 router.get("/getgenres", getGenresHandler);
 router.get("/getreleaseyears", getReleaseYearsHandler);
 router.get("/peliculas/analisis/:genre", analisisRatingPorAno);
+router.get("/peliculas/analisisvotos/:genre", analisisVotosGenero);
 
 module.exports = router;
