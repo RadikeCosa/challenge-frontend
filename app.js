@@ -15,6 +15,7 @@ const {
   getGenres,
   getReleaseYears,
 } = require("./utils/filters");
+const { login } = require("./controller/loginController");
 
 const personas = loadDataFromCSV("personas");
 const peliculas = loadDataFromCSV("peliculas");
