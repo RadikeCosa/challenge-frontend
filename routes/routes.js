@@ -8,6 +8,11 @@ const {
   getpeliculasByYear,
   getpeliculasByRating,
 } = require("../controller/peliculasController");
+const { registerVote, updateVote } = require("../controller/voteController");
+const {
+  getGenresHandler,
+  getReleaseYearsHandler,
+} = require("../controller/selectControllers");
 
 // Rutas
 router.post("/login", login);
@@ -16,5 +21,9 @@ router.get("/peliculas/name/:name", getPeliculasByName);
 router.get("/peliculas/genre/:genre", getPeliculasByGenre);
 router.get("/peliculas/ano/:ano", getpeliculasByYear);
 router.get("/peliculas/rating/:rating", getpeliculasByRating);
+router.post("/voto", registerVote);
+router.put("/voto", updateVote);
+router.get("/getgenres", getGenresHandler);
+router.get("/getreleaseyears", getReleaseYearsHandler);
 
 module.exports = router;
