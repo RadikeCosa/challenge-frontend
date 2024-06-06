@@ -37,5 +37,26 @@ const analisisVotosGenero = (req, res) => {
     res.status(404).json({ message: `No se encontraron películas del género` });
   }
 };
+const analisisVotosYRatingPorGenero = (req, res) => {
+  const ratings = calculateMovieRatings(scores);
+  const peliculasConRating = mergeMoviesWithRatings(peliculas, ratings);
+  const { genre } = req.params;
+  const peliculasFiltradas = filterByGenre(peliculasConRating, genre);
+  const arrayId = idPeliculasGenero(peliculasFiltradas);
+  const votosPorRating = contarVotos(scores, arrayId);
+  const averageRatingByYear = getAverageByYear(peliculasFiltradas);
 
-module.exports = { analisisRatingPorAno, analisisVotosGenero };
+  if (arrayId.length > 0) {
+    res.json({ votosPorRating, averageRatingByYear });
+  } else {
+    res
+      .status(404)
+      .json({ message: `No se encontraron películas del género ${genre}` });
+  }
+};
+
+module.exports = {
+  analisisRatingPorAno,
+  analisisVotosGenero,
+  analisisVotosYRatingPorGenero,
+};
